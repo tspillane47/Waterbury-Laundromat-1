@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Waterbury Laundromat · Stay Fresh · Waterbury, VT</title>
+<meta name="description" content="Waterbury's neighborhood laundromat. Wash & fold $1.70/lb, open every day 6am–9pm. 5 Park Row, Waterbury Village, VT. (802) 391-4447"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:#071828;
+  color:#e8f4ff;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+#bubbleCanvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;
+}
+
+.page{max-width:1080px;margin:0 auto;padding:24px 24px 80px;position:relative;z-index:1;}
+
+/* ═══ NAV — logo die-cut top left, big ═══ */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 28px 10px 10px;
+  background:rgba(5,15,35,0.82);
+  backdrop-filter:blur(20px);
+  border:1.5px solid rgba(100,190,255,0.18);
+  border-radius:22px;
+  margin-bottom:20px;
+  box-shadow:0 4px 30px rgba(0,0,0,0.35);
+  overflow:visible;
+  min-height:90px;
+}
+
+/* die-cut logo — sits in top-left of nav, bleeds slightly */
+.nav-logo-wrap{
+  display:flex;align-items:center;
+  flex-shrink:0;
+  /* pull it up so it peeks above nav */
+  margin-top:-18px;
+  margin-bottom:-10px;
+  margin-left:4px;
+}
+.nav-logo-img{
+  height:120px;
+  width:auto;
+  display:block;
+  /* CSS trick: paint white around the logo edges to simulate die-cut,
+     then use mix-blend-mode to knock out the black JPEG background */
+  filter:
+    drop-shadow(0 0 0 6px white)
+    drop-shadow(0 0 0 6px white)
+    drop-shadow(0 0 0 6px white)
+    drop-shadow(0 4px 20px rgba(0,160,255,0.5))
+    drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+  /* lighten blends black bg away against the dark nav */
+  mix-blend-mode:lighten;
+  animation:logoWiggle 5s ease-in-out infinite;
+}
+@keyframes logoWiggle{
+  0%,100%{transform:translateY(0) rotate(-1deg);}
+  50%{transform:translateY(-4px) rotate(1deg);}
+}
+
+.nav-right{display:flex;align-items:center;gap:4px;}
+.nav-links{display:flex;gap:4px;align-items:center;}
+.nav-links a{
+  text-decoration:none;font-size:13px;font-weight:800;
+  color:#6aaad8;padding:9px 14px;border-radius:12px;
+  transition:background 0.15s,color 0.15s;white-space:nowrap;
+}
+.nav-links a:hover{background:rgba(100,190,255,0.1);color:#b8e4ff;}
+.nav-cta{
+  background:linear-gradient(135deg,#1a80e0,#0d5aaa)!important;
+  color:white!important;
+  box-shadow:0 2px 14px rgba(20,100,220,0.35)!important;
+  margin-left:6px;
+}
+
+/* ═══ HERO — full width, photo right, text left ═══ */
+.hero{
+  display:grid;grid-template-columns:1fr 1fr;
+  border-radius:28px;overflow:hidden;
+  margin-bottom:20px;
+  border:2px solid rgba(80,160,255,0.2);
+  box-shadow:0 24px 80px rgba(0,0,0,0.5);
+  min-height:480px;
+}
+.hero-left{
+  background:linear-gradient(155deg,#071828 0%,#0d3560 55%,#1255a0 100%);
+  padding:52px 48px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.hero-left::before{
+  content:'';position:absolute;
+  width:300px;height:300px;border-radius:50%;
+  background:rgba(255,255,255,0.03);
+  top:-80px;right:-60px;pointer-events:none;
+}
+.hero-right{position:relative;overflow:hidden;}
+.hero-right img{width:100%;height:100%;object-fit:cover;display:block;}
+.hero-right-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(7,24,40,0.45),transparent 65%);
+}
+
+.open-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.22);
+  border-radius:20px;padding:7px 16px;
+  font-size:12px;font-weight:800;color:#a0d0ff;
+  margin-bottom:20px;width:fit-content;letter-spacing:0.04em;
+}
+.pulse{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
+
+.hero-h1{
+  font-family:'Pacifico',cursive;
+  font-size:46px;color:white;line-height:1.2;margin-bottom:12px;
+  text-shadow:0 2px 20px rgba(0,0,0,0.4);
+}
+.hero-h1 em{font-style:normal;color:#7ecfff;display:block;font-size:34px;}
+.hero-tagline{font-size:15px;color:#7aaccc;line-height:1.75;margin-bottom:28px;font-weight:600;max-width:360px;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;
+  border-radius:12px;padding:11px 20px;
+  text-decoration:none;border:none;cursor:pointer;
+  transition:transform 0.12s,filter 0.12s;
+}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.1);}
+.btn-white{background:white;color:#0d3560;box-shadow:0 4px 16px rgba(0,0,0,0.25);}
+.btn-ghost{background:rgba(255,255,255,0.1);color:#c0e0ff;border:1.5px solid rgba(255,255,255,0.25);}
+.btn-blue{background:linear-gradient(135deg,#1a80e0,#0d5aaa);color:white;box-shadow:0 4px 16px rgba(20,100,220,0.4);}
+.hero-btns{display:flex;flex-direction:column;gap:9px;max-width:300px;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.stat-card{
+  background:rgba(5,15,35,0.7);backdrop-filter:blur(12px);
+  border-radius:20px;padding:22px 16px;text-align:center;
+  border:1.5px solid rgba(100,190,255,0.15);
+  box-shadow:0 4px 20px rgba(0,0,0,0.25);
+}
+.stat-num{font-family:'Pacifico',cursive;font-size:28px;color:#7ecfff;line-height:1;}
+.stat-lbl{font-size:11px;color:#3a6a90;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;margin-top:7px;}
+
+/* GLASS CARD */
+.glass-card{
+  background:rgba(5,15,40,0.65);backdrop-filter:blur(16px);
+  border-radius:28px;border:1.5px solid rgba(100,190,255,0.18);
+  box-shadow:0 8px 40px rgba(0,0,0,0.3);padding:36px 40px;margin-bottom:20px;
+}
+.section-eyebrow{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:#4a98cc;margin-bottom:6px;}
+.section-title{font-family:'Playfair Display',serif;font-size:30px;color:#cce8ff;margin-bottom:6px;}
+.section-sub{font-size:14px;color:#3a6a90;font-weight:600;margin-bottom:26px;}
+
+/* PHOTO GRID */
+.photo-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:250px 200px;
+  gap:12px;
+}
+.photo-slot{border-radius:16px;overflow:hidden;position:relative;border:1.5px solid rgba(100,190,255,0.12);}
+.photo-slot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.5s;}
+.photo-slot:hover img{transform:scale(1.06);}
+.photo-slot.wide{grid-column:span 2;}
+.photo-slot.tall{grid-row:span 2;}
+.photo-cap{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(3,10,30,0.88),transparent);
+  padding:22px 14px 12px;font-size:11px;font-weight:800;
+  color:rgba(255,255,255,0.88);letter-spacing:0.05em;text-transform:uppercase;
+}
+
+/* PRICING */
+.pricing-glass{
+  background:linear-gradient(150deg,rgba(3,10,30,0.88),rgba(10,45,110,0.78));
+  backdrop-filter:blur(20px);border-radius:28px;padding:40px;margin-bottom:20px;
+  border:2px solid rgba(100,190,255,0.2);box-shadow:0 12px 50px rgba(0,0,0,0.4);
+}
+.price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:4px;}
+.price-card{background:rgba(255,255,255,0.07);border:1.5px solid rgba(100,190,255,0.16);border-radius:20px;padding:26px;}
+.price-card.featured{background:rgba(255,255,255,0.95);border-color:rgba(200,230,255,0.8);}
+.featured-badge{display:inline-block;background:linear-gradient(135deg,#1a80e0,#0d5aaa);color:white;font-size:10px;font-weight:900;letter-spacing:0.07em;padding:4px 12px;border-radius:20px;text-transform:uppercase;margin-bottom:12px;}
+.price-emoji{font-size:28px;margin-bottom:10px;display:block;}
+.price-name{font-size:12px;font-weight:900;color:#5a9ad8;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;}
+.price-card.featured .price-name{color:#1155a0;}
+.price-num{font-family:'Pacifico',cursive;font-size:38px;color:#a0d0ff;line-height:1;}
+.price-card.featured .price-num{color:#0a2d55;}
+.price-unit{font-size:11px;color:#3a7aaa;font-weight:700;margin-top:4px;}
+.price-card.featured .price-unit{color:#5a8aaa;}
+.price-desc{font-size:13px;color:#3a7aaa;margin-top:10px;line-height:1.6;font-weight:600;}
+.price-card.featured .price-desc{color:#3a6080;}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.amenities{display:flex;flex-wrap:wrap;gap:9px;}
+.amenity{display:flex;align-items:center;gap:6px;font-size:13px;color:#7ab8e0;font-weight:700;background:rgba(100,190,255,0.08);border:1.5px solid rgba(100,190,255,0.18);border-radius:20px;padding:7px 13px;}
+
+.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
+.review{background:rgba(255,255,255,0.05);border:1.5px solid rgba(100,190,255,0.13);border-radius:18px;padding:20px;}
+.stars{color:#fbbf24;font-size:14px;margin-bottom:8px;}
+.review-text{font-size:13px;color:#6a9ab8;line-height:1.65;margin-bottom:12px;font-weight:600;}
+.reviewer{font-size:12px;color:#90c0e0;font-weight:900;}
+
+.visit-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:22px;}
+.visit-label{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.09em;color:#2a5a80;margin-bottom:5px;}
+.visit-value{font-size:15px;font-weight:800;color:#b0d8ff;line-height:1.5;}
+.visit-value a{color:#7ecfff;text-decoration:none;}
+.map-box{border-radius:16px;overflow:hidden;border:1.5px solid rgba(100,190,255,0.18);height:200px;background:rgba(100,190,255,0.05);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.map-box p{font-size:13px;color:#3a6a90;font-weight:700;}
+
+footer{background:rgba(2,8,20,0.92);backdrop-filter:blur(20px);border-radius:28px;padding:44px 48px 32px;border:2px solid rgba(100,190,255,0.1);box-shadow:0 12px 50px rgba(0,0,0,0.5);}
+.footer-inner{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;margin-bottom:32px;}
+.footer-wordmark{font-family:'Pacifico',cursive;font-size:24px;color:#7ecfff;margin-bottom:6px;}
+.footer-sub{font-size:12px;color:#2a5070;font-weight:700;margin-bottom:18px;}
+.footer-socials{display:flex;gap:10px;}
+.social-btn{width:38px;height:38px;border-radius:11px;background:rgba(100,190,255,0.08);border:1.5px solid rgba(100,190,255,0.18);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#6aaad8;font-size:14px;font-weight:900;transition:background 0.15s;}
+.social-btn:hover{background:rgba(100,190,255,0.18);}
+.footer-col-title{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;color:#2a5070;margin-bottom:14px;}
+.footer-col p{font-size:13px;color:#3a6080;font-weight:600;line-height:1.9;}
+.footer-col a{color:#5aacdc;text-decoration:none;}
+.footer-bottom{border-top:1px solid rgba(100,190,255,0.08);padding-top:22px;display:flex;justify-content:space-between;align-items:center;}
+.footer-bottom p{font-size:12px;color:#1a4060;font-weight:700;}
+
+@media(max-width:768px){
+  nav{min-height:auto;padding:8px 16px 8px 8px;}
+  .nav-logo-img{height:80px;}
+  .nav-logo-wrap{margin-top:-10px;margin-bottom:-6px;}
+  .hero{grid-template-columns:1fr;}
+  .hero-right{display:none;}
+  .hero-left{padding:36px 24px;}
+  .hero-h1{font-size:34px;}
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .photo-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+  .photo-slot.wide,.photo-slot.tall{grid-column:span 1;grid-row:span 1;}
+  .price-grid{grid-template-columns:1fr;}
+  .two-col{grid-template-columns:1fr;}
+  .review-grid{grid-template-columns:1fr;}
+  .visit-grid{grid-template-columns:1fr;}
+  footer{padding:32px 22px 24px;}
+  .footer-inner{grid-template-columns:1fr;}
+  .footer-bottom{flex-direction:column;gap:8px;}
+  .nav-links a:not(.nav-cta){display:none;}
+  .glass-card{padding:26px 20px;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bubbleCanvas" aria-hidden="true"></canvas>
+<script>
+(function(){
+  const canvas=document.getElementById('bubbleCanvas');
+  const ctx=canvas.getContext('2d');
+  let W,H,bubbles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  function makeBubble(){
+    const r=Math.random()*12+3;
+    return{x:Math.random()*W,y:H+r+Math.random()*80,r,
+      vy:Math.random()*0.55+0.2,vx:(Math.random()-0.5)*0.35,
+      wobble:Math.random()*Math.PI*2,ws:Math.random()*0.014+0.004,wa:Math.random()*16+3,
+      op:Math.random()*0.3+0.07,
+      clusterY:H-Math.random()*250,paused:false,pTimer:0,pDur:Math.random()*100+30};
+  }
+  for(let i=0;i<180;i++){const b=makeBubble();b.y=Math.random()*H;bubbles.push(b);}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    bubbles.forEach(b=>{
+      b.wobble+=b.ws;
+      const wx=Math.sin(b.wobble)*b.wa;
+      if(!b.paused&&b.y<b.clusterY&&b.y>H-320&&Math.random()<0.003){b.paused=true;b.pTimer=0;}
+      if(b.paused){b.pTimer++;b.x+=Math.sin(b.wobble*2)*0.25;if(b.pTimer>b.pDur)b.paused=false;}
+      else{b.y-=b.vy;b.x+=b.vx;}
+      if(b.y<-b.r*2){const nb=makeBubble();Object.assign(b,nb);}
+      const g=ctx.createRadialGradient(b.x-b.r*.3+wx,b.y-b.r*.3,b.r*.05,b.x+wx,b.y,b.r);
+      g.addColorStop(0,`rgba(210,240,255,${b.op*1.5})`);
+      g.addColorStop(0.4,`rgba(100,180,255,${b.op*.5})`);
+      g.addColorStop(1,`rgba(40,120,220,${b.op*.1})`);
+      ctx.beginPath();ctx.arc(b.x+wx,b.y,b.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+      ctx.beginPath();ctx.arc(b.x+wx,b.y,b.r,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(140,210,255,${b.op*.9})`;ctx.lineWidth=0.7;ctx.stroke();
+      ctx.beginPath();ctx.arc(b.x+wx-b.r*.3,b.y-b.r*.3,b.r*.2,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${b.op*1.3})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+
+<div class="page">
+
+<!-- ═══ NAV: die-cut logo top-left ═══ -->
+<nav>
+  <div class="nav-left">
+    <div class="nav-logo-wrap">
+      <img
+        class="nav-logo-img"
+        src="images/logo-diecut.png"
+        alt="Waterbury Laundromat Stay Fresh logo"
+      />
+    </div>
+    <div class="nav-wordmark-block">
+      <div class="nav-wordmark-address">5 Park Row · Waterbury, VT</div>
+      <div class="nav-wordmark-address" style="margin-top:5px;">(802) 391-4447</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#gallery">Gallery</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#visit">Visit</a>
+      <a href="tel:8023914447" class="btn nav-cta">📞 Call us</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="open-pill"><div class="pulse"></div>Open every day · 6am – 9pm</div>
+    <h1 class="hero-h1">Stay Fresh,<em>Vermont.</em></h1>
+    <p class="hero-tagline">
+      Modern machines, leather lounge chairs, and same-day wash &amp; fold —
+      right in the heart of Waterbury Village.
+    </p>
+    <div class="hero-btns">
+      <a href="https://maps.google.com/?q=5+Park+Row,+Waterbury+VT+05676" target="_blank" class="btn btn-white">📍 Get directions · 5 Park Row</a>
+      <a href="tel:8023914447" class="btn btn-ghost">📞 (802) 391-4447</a>
+      <a href="#pricing" class="btn btn-ghost">💲 Wash &amp; fold · $1.70/lb →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="images/interior-lounge.jpg" alt="Waterbury Laundromat interior"/>
+    <div class="hero-right-overlay"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-card"><div class="stat-num">30+</div><div class="stat-lbl">Years in VT</div></div>
+  <div class="stat-card"><div class="stat-num">13+</div><div class="stat-lbl">Card machines</div></div>
+  <div class="stat-card"><div class="stat-num">★ 4.8</div><div class="stat-lbl">Google rating</div></div>
+  <div class="stat-card"><div class="stat-num">7</div><div class="stat-lbl">Days a week</div></div>
+</div>
+
+<!-- GALLERY -->
+<section class="glass-card" id="gallery">
+  <div class="section-eyebrow">🫧 Inside &amp; out</div>
+  <div class="section-title">Come see the space</div>
+  <div class="section-sub">Clean, bright, and surprisingly cozy — every visit.</div>
+  <div class="photo-grid">
+    <div class="photo-slot tall">
+      <img src="images/machines-row.jpg" alt="Hand-painted blue mural"/>
+      <div class="photo-cap">🎨 Original mural · inside</div>
+    </div>
+    <div class="photo-slot">
+      <img src="images/machines-wide.png" alt="Modern front-load washers"/>
+      <div class="photo-cap">⚙️ 200G-force washers</div>
+    </div>
+    <div class="photo-slot">
+      <img src="images/hours-window.jpg" alt="Stay Fresh neon sign"/>
+      <div class="photo-cap">✨ Stay Fresh · neon sign</div>
+    </div>
+    <div class="photo-slot wide">
+      <img src="images/mural-wall.jpg" alt="Everyday 6a-9p"/>
+      <div class="photo-cap">🕐 Open every day · 6a–9p</div>
+    </div>
+    <div class="photo-slot wide">
+      <img src="images/exterior-day.png" alt="Exterior daytime"/>
+      <div class="photo-cap">☀️ 5 Park Row · Waterbury Village</div>
+    </div>
+    <div class="photo-slot">
+      <img src="images/exterior-night.webp" alt="Exterior night"/>
+      <div class="photo-cap">🌙 Open late every night</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-glass" id="pricing">
+  <div class="section-eyebrow">💲 Transparent pricing</div>
+  <div class="section-title" style="color:white;">Simple. Fair. No surprises.</div>
+  <div class="section-sub">Card accepted on 13+ machines. Call ahead for drop-off.</div>
+  <div class="price-grid">
+    <div class="price-card">
+      <span class="price-emoji">🫧</span>
+      <div class="price-name">Self-service wash</div>
+      <div class="price-num">$2–5</div>
+      <div class="price-unit">per load · varies by machine size</div>
+      <div class="price-desc">High-efficiency top-load &amp; front-load with 200G-force spin. Card readers on 13+ machines.</div>
+    </div>
+    <div class="price-card featured">
+      <div class="featured-badge">⭐ Most popular</div>
+      <span class="price-emoji">👕</span>
+      <div class="price-name">Wash, dry &amp; fold</div>
+      <div class="price-num">$1.70</div>
+      <div class="price-unit">per pound · call ahead to schedule</div>
+      <div class="price-desc">Drop it off, we handle everything. Ready same day. Call <a href="tel:8023914447" style="color:#1155a0;">(802) 391-4447</a> before you arrive.</div>
+    </div>
+    <div class="price-card">
+      <span class="price-emoji">💨</span>
+      <div class="price-name">Dryers</div>
+      <div class="price-num">$0.25</div>
+      <div class="price-unit">per 5 minutes</div>
+      <div class="price-desc">High-heat and delicate cycles. Multiple sizes for every load type.</div>
+    </div>
+    <div class="price-card">
+      <span class="price-emoji">🛏️</span>
+      <div class="price-name">Bulky loads</div>
+      <div class="price-num">XL</div>
+      <div class="price-unit">comforters · blankets · sleeping bags</div>
+      <div class="price-desc">Oversized front-load machines for king-size comforters and bulky items.</div>
+    </div>
+  </div>
+</section>
+
+<!-- AMENITIES + ABOUT -->
+<div class="two-col">
+  <div class="glass-card" style="margin-bottom:0;">
+    <div class="section-eyebrow">✨ Inside</div>
+    <div class="section-title" style="font-size:24px;margin-bottom:18px;">What's included</div>
+    <div class="amenities">
+      <div class="amenity">📶 Free WiFi</div>
+      <div class="amenity">💳 Card &amp; coin</div>
+      <div class="amenity">♿ ADA accessible</div>
+      <div class="amenity">📺 TV lounge</div>
+      <div class="amenity">❄️ Air conditioned</div>
+      <div class="amenity">🧴 Detergent vending</div>
+      <div class="amenity">🛋️ Leather chairs</div>
+      <div class="amenity">📦 Same-day drop-off</div>
+      <div class="amenity">🅿️ Free parking</div>
+      <div class="amenity">🎨 Original mural art</div>
+    </div>
+  </div>
+  <div class="glass-card" style="margin-bottom:0;">
+    <div class="section-eyebrow">🏡 Our story</div>
+    <div class="section-title" style="font-size:24px;margin-bottom:14px;">Waterbury's own</div>
+    <p style="font-size:14px;color:#4a7a9a;line-height:1.85;font-weight:600;">
+      For over 30 years, Waterbury Laundromat has been a cornerstone of this community.
+      Under new management since 2020, we upgraded to 200G-force washers, added card readers
+      to 13+ machines, and commissioned original mural art and a neon sign that make this
+      the most unique laundromat in Vermont.
+    </p>
+    <p style="font-size:14px;color:#4a7a9a;line-height:1.85;font-weight:600;margin-top:12px;">
+      Serving locals, families, and Stowe skiers — come in, get it done, enjoy the vibe.
+    </p>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<section class="glass-card" id="reviews">
+  <div class="section-eyebrow">⭐ Reviews</div>
+  <div class="section-title">What the community says</div>
+  <div class="review-grid">
+    <div class="review"><div class="stars">★★★★★</div><p class="review-text">"Always spotless and machines always work. Been coming here for years and it just keeps getting better."</p><div class="reviewer">— Sarah M., Waterbury</div></div>
+    <div class="review"><div class="stars">★★★★★</div><p class="review-text">"The wash-and-fold is a game changer. Called ahead, dropped off, picked up same day. Couldn't be easier."</p><div class="reviewer">— Tom K., Stowe</div></div>
+    <div class="review"><div class="stars">★★★★★</div><p class="review-text">"Huge machines for my king-size comforters. The mural inside is gorgeous — best laundromat in Vermont."</p><div class="reviewer">— Jen R., Duxbury</div></div>
+    <div class="review"><div class="stars">★★★★★</div><p class="review-text">"Credit card on every machine, clean, modern, and the leather chairs make waiting actually comfortable."</p><div class="reviewer">— Mike D., Waterbury</div></div>
+  </div>
+  <div style="margin-top:22px;text-align:center;">
+    <a href="https://search.google.com/local/reviews" target="_blank" class="btn btn-blue">⭐ Leave us a Google review</a>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section class="glass-card" id="visit">
+  <div class="section-eyebrow">📍 Find us</div>
+  <div class="section-title">Come visit</div>
+  <div class="section-sub" style="margin-bottom:24px;">Right in the heart of Waterbury Village — free parking, easy in &amp; out.</div>
+  <div class="visit-grid">
+    <div><div class="visit-label">Address</div><div class="visit-value">5 Park Row<br>Waterbury Village, VT 05676</div></div>
+    <div><div class="visit-label">Hours</div><div class="visit-value">Every day<br>6:00 am – 9:00 pm</div></div>
+    <div><div class="visit-label">Phone</div><div class="visit-value"><a href="tel:8023914447">(802) 391-4447</a></div></div>
+    <div><div class="visit-label">Drop-off service</div><div class="visit-value">Call ahead<br>Same-day turnaround</div></div>
+  </div>
+  <div class="map-box">
+    <div style="font-size:38px;opacity:0.25;">🗺️</div>
+    <p>Paste your Google Maps iframe embed here</p>
+    <a href="https://maps.google.com/?q=5+Park+Row,+Waterbury+VT+05676" target="_blank" class="btn btn-blue" style="font-size:12px;padding:9px 18px;">📍 Open in Google Maps</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-wordmark">Waterbury Laundromat</div>
+      <div class="footer-sub">Stay Fresh · Waterbury, VT 🐾</div>
+      <div class="footer-socials">
+        <a href="https://www.facebook.com/Waterburylaundromat/" target="_blank" class="social-btn" aria-label="Facebook">f</a>
+        <a href="https://www.instagram.com/waterburylaundromat" target="_blank" class="social-btn" aria-label="Instagram">ig</a>
+      </div>
+    </div>
+    <div><div class="footer-col-title">Contact</div><p>5 Park Row<br>Waterbury Village, VT 05676<br><br><a href="tel:8023914447">(802) 391-4447</a></p></div>
+    <div><div class="footer-col-title">Hours</div><p>Every day<br>6:00 am – 9:00 pm<br><br>Drop-off:<br>Call ahead · same day</p></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Waterbury Laundromat · 5 Park Row, Waterbury VT</p>
+    <p>Made with 🫧 in Vermont</p>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
