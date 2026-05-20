@@ -50,7 +50,7 @@ nav{
   margin-left:4px;
 }
 .nav-logo-img{
-  height:120px;
+  height:340px;
   width:auto;
   display:block;
   /* CSS trick: paint white around the logo edges to simulate die-cut,
@@ -236,8 +236,8 @@ footer{background:rgba(2,8,20,0.92);backdrop-filter:blur(20px);border-radius:28p
 
 @media(max-width:768px){
   nav{min-height:auto;padding:8px 16px 8px 8px;}
-  .nav-logo-img{height:80px;}
-  .nav-logo-wrap{margin-top:-10px;margin-bottom:-6px;}
+  .nav-logo-img{height:160px;}
+  .nav-logo-wrap{margin-top:-50px;margin-bottom:-50px;}
   .hero{grid-template-columns:1fr;}
   .hero-right{display:none;}
   .hero-left{padding:36px 24px;}
@@ -435,7 +435,6 @@ footer{background:rgba(2,8,20,0.92);backdrop-filter:blur(20px);border-radius:28p
     <div class="section-eyebrow">✨ Inside</div>
     <div class="section-title" style="font-size:24px;margin-bottom:18px;">What's included</div>
     <div class="amenities">
-      <div class="amenity">📶 Free WiFi</div>
       <div class="amenity">💳 Card &amp; coin</div>
       <div class="amenity">♿ ADA accessible</div>
       <div class="amenity">📺 TV lounge</div>
@@ -464,18 +463,148 @@ footer{background:rgba(2,8,20,0.92);backdrop-filter:blur(20px);border-radius:28p
 
 <!-- REVIEWS -->
 <section class="glass-card" id="reviews">
-  <div class="section-eyebrow">⭐ Reviews</div>
-  <div class="section-title">What the community says</div>
-  <div class="review-grid">
+  <div class="section-eyebrow">⭐ Live from Google</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+    <div>
+      <div class="section-title" style="margin-bottom:0;">What the community says</div>
+    </div>
+    <div id="google-rating-badge" style="display:none;background:rgba(255,255,255,0.08);border:1.5px solid rgba(100,190,255,0.2);border-radius:16px;padding:12px 20px;text-align:center;">
+      <div style="font-family:'Pacifico',cursive;font-size:32px;color:#fbbf24;line-height:1;" id="badge-rating">—</div>
+      <div id="badge-stars" style="color:#fbbf24;font-size:16px;margin:4px 0;"></div>
+      <div style="font-size:11px;color:#5a8aaa;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;" id="badge-count"></div>
+    </div>
+  </div>
+
+  <!-- API key setup notice (shown until key is entered) -->
+  <div id="reviews-setup" style="background:rgba(255,200,50,0.08);border:1.5px solid rgba(255,200,50,0.2);border-radius:16px;padding:20px 24px;margin-bottom:20px;">
+    <div style="font-size:13px;font-weight:800;color:#fbbf24;margin-bottom:8px;">🔑 One-time setup needed</div>
+    <p style="font-size:13px;color:#7a9ab8;line-height:1.65;margin-bottom:14px;">
+      To show live Google reviews, enter your <strong style="color:#b0d8ff;">Google Places API key</strong> below.
+      Get one free at <a href="https://console.cloud.google.com/" target="_blank" style="color:#7ecfff;">console.cloud.google.com</a>
+      — enable the <strong style="color:#b0d8ff;">Places API</strong>, create a key, and paste it here.
+      Your key is saved in your browser only.
+    </p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <input
+        id="api-key-input"
+        type="text"
+        placeholder="AIzaSy..."
+        style="flex:1;min-width:200px;background:rgba(255,255,255,0.08);border:1.5px solid rgba(100,190,255,0.25);border-radius:10px;padding:10px 14px;color:#e0f0ff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;"
+      />
+      <button onclick="saveAndLoad()" class="btn btn-blue" style="font-size:13px;padding:10px 20px;">Save &amp; Load Reviews</button>
+    </div>
+    <div id="api-error" style="font-size:12px;color:#f87171;margin-top:10px;display:none;"></div>
+  </div>
+
+  <!-- Reviews render here -->
+  <div id="reviews-loading" style="display:none;text-align:center;padding:40px;color:#5a8aaa;font-weight:700;">
+    🫧 Loading reviews from Google...
+  </div>
+  <div id="review-grid-live" class="review-grid" style="display:none;"></div>
+
+  <!-- Fallback static reviews shown until API loads -->
+  <div id="review-grid-static" class="review-grid">
     <div class="review"><div class="stars">★★★★★</div><p class="review-text">"Always spotless and machines always work. Been coming here for years and it just keeps getting better."</p><div class="reviewer">— Sarah M., Waterbury</div></div>
     <div class="review"><div class="stars">★★★★★</div><p class="review-text">"The wash-and-fold is a game changer. Called ahead, dropped off, picked up same day. Couldn't be easier."</p><div class="reviewer">— Tom K., Stowe</div></div>
     <div class="review"><div class="stars">★★★★★</div><p class="review-text">"Huge machines for my king-size comforters. The mural inside is gorgeous — best laundromat in Vermont."</p><div class="reviewer">— Jen R., Duxbury</div></div>
     <div class="review"><div class="stars">★★★★★</div><p class="review-text">"Credit card on every machine, clean, modern, and the leather chairs make waiting actually comfortable."</p><div class="reviewer">— Mike D., Waterbury</div></div>
   </div>
+
   <div style="margin-top:22px;text-align:center;">
-    <a href="https://search.google.com/local/reviews" target="_blank" class="btn btn-blue">⭐ Leave us a Google review</a>
+    <a href="https://search.google.com/local/writereview?placeid=ChIJe7KBFsfrtkwRXa_HBFrWLLg" target="_blank" class="btn btn-blue">⭐ Leave us a Google review</a>
   </div>
 </section>
+
+<script>
+// ── Google Places Reviews Loader ─────────────────────────────
+const PLACE_ID = 'ChIJe7KBFsfrtkwRXa_HBFrWLLg'; // Waterbury Laundromat, VT
+
+function starsHtml(n) {
+  return '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+}
+
+function renderReviews(reviews, rating, totalRatings) {
+  // Update rating badge
+  const badge = document.getElementById('google-rating-badge');
+  document.getElementById('badge-rating').textContent = rating.toFixed(1);
+  document.getElementById('badge-stars').textContent = starsHtml(rating);
+  document.getElementById('badge-count').textContent = totalRatings + ' Google reviews';
+  badge.style.display = 'block';
+
+  // Update stat card rating
+  const statNums = document.querySelectorAll('.stat-num');
+  statNums.forEach(el => { if(el.textContent.includes('4.')) el.textContent = '★ ' + rating.toFixed(1); });
+
+  // Sort by most recent, take top 4 with text
+  const withText = reviews.filter(r => r.text && r.text.length > 20)
+    .sort((a,b) => b.time - a.time).slice(0, 4);
+
+  const grid = document.getElementById('review-grid-live');
+  grid.innerHTML = withText.map(r => {
+    const stars = starsHtml(r.rating);
+    const text = r.text.length > 220 ? r.text.slice(0,220).trim() + '…' : r.text;
+    const date = new Date(r.time * 1000).toLocaleDateString('en-US',{month:'short',year:'numeric'});
+    return \`<div class="review">
+      <div class="stars" style="color:#fbbf24;">\${stars}</div>
+      <p class="review-text">"\${text}"</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+        <div class="reviewer">— \${r.author_name}</div>
+        <div style="font-size:11px;color:#3a6a90;font-weight:700;">\${date}</div>
+      </div>
+    </div>\`;
+  }).join('');
+
+  // Hide static, show live
+  document.getElementById('review-grid-static').style.display = 'none';
+  document.getElementById('review-grid-live').style.display = 'grid';
+  document.getElementById('reviews-loading').style.display = 'none';
+}
+
+function loadReviews(apiKey) {
+  document.getElementById('reviews-loading').style.display = 'block';
+  document.getElementById('review-grid-static').style.display = 'none';
+
+  // Use Google Places API via a script tag (CORS-friendly browser method)
+  const url = \`https://maps.googleapis.com/maps/api/place/details/json?place_id=\${PLACE_ID}&fields=rating,user_ratings_total,reviews&reviews_sort=newest&key=\${apiKey}\`;
+
+  // Note: Direct Places API calls from browser require allowed referrers set in Google Console
+  // We use a callback approach
+  fetch(\`https://maps.googleapis.com/maps/api/place/details/json?place_id=\${PLACE_ID}&fields=rating,user_ratings_total,reviews&reviews_sort=newest&key=\${apiKey}\`)
+    .then(r => r.json())
+    .then(data => {
+      if(data.status !== 'OK') {
+        throw new Error(data.status + ': ' + (data.error_message || 'Check your API key and Places API is enabled'));
+      }
+      const p = data.result;
+      renderReviews(p.reviews || [], p.rating, p.user_ratings_total);
+      document.getElementById('reviews-setup').style.display = 'none';
+      // Save key for next visit
+      localStorage.setItem('gplaces_key', apiKey);
+    })
+    .catch(err => {
+      document.getElementById('reviews-loading').style.display = 'none';
+      document.getElementById('review-grid-static').style.display = 'grid';
+      const errEl = document.getElementById('api-error');
+      errEl.style.display = 'block';
+      errEl.textContent = '⚠️ ' + err.message;
+    });
+}
+
+function saveAndLoad() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if(!key) { document.getElementById('api-error').style.display='block'; document.getElementById('api-error').textContent='Please enter your API key.'; return; }
+  loadReviews(key);
+}
+
+// Auto-load if key was previously saved
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('gplaces_key');
+  if(saved) {
+    document.getElementById('api-key-input').value = saved;
+    loadReviews(saved);
+  }
+});
+</script>
 
 <!-- VISIT -->
 <section class="glass-card" id="visit">
