@@ -286,7 +286,7 @@ main {
   flex-direction: column;
   gap: 4.5rem;
 }
-#gallery, #pricing, #reviews, #visit { scroll-margin-top: 18.5rem; }
+#gallery, #floorplan, #pricing, #reviews, #visit { scroll-margin-top: 18.5rem; }
 
 .eyebrow {
   font-size: 0.78rem;
@@ -729,7 +729,7 @@ main {
   }
   .hero { padding-top: 16rem; padding-bottom: 4.5rem; }
   .hero-tagline { font-size: 1.28rem; }
-  #gallery, #pricing, #reviews, #visit { scroll-margin-top: 16rem; }
+  #gallery, #floorplan, #pricing, #reviews, #visit { scroll-margin-top: 16rem; }
   .photo-grid {
     grid-template-columns: 1.15fr 1fr 1fr;
     grid-template-rows: 250px 210px 230px;
@@ -760,6 +760,185 @@ main {
   .hero-actions .btn { min-height: 42px; font-size: 0.92rem; }
 }
 
+.floor-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem 1.1rem;
+}
+.floor-logo {
+  width: 132px;
+  height: auto;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.28));
+}
+.floor-head-copy { flex: 1 1 16rem; }
+.floor-head .section-lead { margin-top: 0.45rem; }
+.floor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.2rem;
+  margin-bottom: 0.9rem;
+}
+.floor-note {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(180, 220, 255, 0.28);
+  font-weight: 800;
+  color: #d6ebff;
+}
+.floor-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #c5dff2;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+.floor-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.floor-swatch {
+  width: 1.15rem;
+  height: 0.8rem;
+  border-radius: 4px;
+  flex: 0 0 auto;
+}
+.floor-swatch-washer { background: #f7fbfe; border: 2px solid #24567f; }
+.floor-swatch-dryer { background: #e7eef6; border: 2px solid #5d7590; }
+.floor-swatch-door { background: #1b6fbf; border: 2px solid #1b6fbf; }
+.floor-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 18px;
+  background: #f4f8fd;
+  border: 1px solid rgba(160, 210, 255, 0.22);
+}
+.floor-scroll svg {
+  display: block;
+  width: 100%;
+  min-width: 760px;
+  height: auto;
+}
+#floorSvg text { font-family: "Nunito", sans-serif; }
+#floorSvg .machine { cursor: pointer; }
+#floorSvg .machine-body {
+  fill: #fbfdff;
+  stroke: #24567f;
+  stroke-width: 1.6;
+}
+#floorSvg .machine.is-dryer .machine-body {
+  fill: #e7eef6;
+  stroke: #5d7590;
+}
+#floorSvg .machine-door {
+  fill: #d7ebf8;
+  stroke: #8fb4d4;
+  stroke-width: 1.4;
+}
+#floorSvg .door-bar { fill: #1b6fbf; pointer-events: none; }
+#floorSvg .machine:hover .machine-body,
+#floorSvg .machine:focus-visible .machine-body { stroke: #0d5aaa; stroke-width: 2.4; }
+#floorSvg .machine.is-selected .machine-body {
+  fill: #d9edfb;
+  stroke: #0d5aaa;
+  stroke-width: 3;
+}
+#floorSvg .machine.is-dryer.is-selected .machine-body { fill: #d4e4f4; }
+#floorSvg .machine:focus-visible { outline: 2px solid #0d5aaa; outline-offset: 2px; }
+.floor-swipe {
+  margin: 0.55rem 0 0;
+  color: #9ec3de;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+.floor-scale {
+  margin: 0.7rem 0 0;
+  color: #9ec3de;
+  font-size: 0.95rem;
+}
+.floor-detail {
+  margin-top: 0.9rem;
+  padding: 0.95rem 1rem 1rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(160, 210, 255, 0.16);
+}
+.floor-detail-kicker {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8ec4ee;
+}
+.floor-detail-title {
+  margin-top: 0.15rem;
+  font-family: "Pacifico", cursive;
+  font-size: 1.85rem;
+  line-height: 1.15;
+  color: #9ad8ff;
+  font-weight: 400;
+}
+.floor-detail-copy {
+  margin-top: 0.25rem;
+  color: #d6ebff;
+}
+.floor-fallback {
+  margin: 0 0 0.8rem;
+  color: #d6ebff;
+  font-weight: 800;
+}
+.floor-fallback[hidden] { display: none; }
+.floor-list {
+  margin-top: 1rem;
+}
+.floor-list summary {
+  cursor: pointer;
+  font-weight: 800;
+  color: #d6ebff;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.floor-groups { display: grid; gap: 0.85rem; margin-top: 0.35rem; }
+.floor-group h3 {
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  color: #9ad8ff;
+}
+.floor-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.floor-chips button {
+  border-radius: 999px;
+  border: 1px solid rgba(160, 210, 255, 0.28);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e7f3ff;
+  padding: 0.4rem 0.75rem;
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+.floor-chips button.is-selected {
+  background: linear-gradient(135deg, #1b84e6, #0d5aaa);
+  color: #fff;
+  border-color: transparent;
+}
+@media (min-width: 900px) {
+  .floor-swipe { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .js .reveal,
@@ -786,6 +965,7 @@ main {
     <a href="#pricing">Pricing</a>
     <a href="#reviews">Reviews</a>
     <a href="#visit">Visit</a>
+    <a class="nav-floor" href="#floorplan">Floor plan</a>
     <a class="nav-call" href="tel:8023914447">📞 Call us</a>
   </nav>
 </header>
@@ -855,6 +1035,40 @@ main {
         <div class="photo-cap">Lit up at night</div>
       </div>
     </div>
+  </section>
+
+  <section class="glass reveal" id="floorplan">
+    <div class="section-head floor-head">
+      <img class="floor-logo" src="images/logo-diecut.png" width="1119" height="593" alt="Waterbury Laundromat">
+      <div class="floor-head-copy">
+        <p class="eyebrow">🫧 Machines</p>
+        <h2 class="section-title">Floor plan</h2>
+        <p class="section-lead">Every washer and dryer, in the same places as the store.</p>
+      </div>
+    </div>
+    <div class="floor-toolbar">
+      <p class="floor-note">Live status coming soon.</p>
+      <ul class="floor-legend">
+        <li><span class="floor-swatch floor-swatch-washer" aria-hidden="true"></span> Washer</li>
+        <li><span class="floor-swatch floor-swatch-dryer" aria-hidden="true"></span> Dryer pocket, 30 lb</li>
+        <li><span class="floor-swatch floor-swatch-door" aria-hidden="true"></span> Blue bar is the door side</li>
+      </ul>
+    </div>
+    <p class="floor-fallback" id="floorFallback">Open this page in a browser to see the floor plan.</p>
+    <div class="floor-scroll" id="floorScroll">
+      <svg id="floorSvg" role="group" aria-label="Waterbury Laundromat floor plan. Live status coming soon."></svg>
+    </div>
+    <p class="floor-swipe">Swipe sideways to see the whole plan.</p>
+    <p class="floor-scale">Same layout as the store. Not to scale.</p>
+    <div class="floor-detail" id="floorDetail" aria-live="polite">
+      <p class="floor-detail-kicker" id="floorDetailKicker">Machines</p>
+      <p class="floor-detail-title" id="floorDetailTitle">Select a washer or dryer</p>
+      <p class="floor-detail-copy" id="floorDetailCopy">The number, size, and brand show here.</p>
+    </div>
+    <details class="floor-list">
+      <summary>Machine list</summary>
+      <div class="floor-groups" id="floorList"></div>
+    </details>
   </section>
 
   <section class="pricing reveal" id="pricing">
@@ -1011,6 +1225,8 @@ main {
   </div>
 </footer>
 
+<script src="data/machines.js"></script>
+<script src="floorplan.js"></script>
 <script>
 (function () {
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
