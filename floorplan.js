@@ -85,7 +85,8 @@
     if (machine.stackPosition === "top") pocket = " Top pocket.";
     if (machine.stackPosition === "bottom") pocket = " Bottom pocket.";
     var size = machine.sizeLb ? machine.sizeLb + " pound " : "";
-    return kind + " " + machine.paintedNumber + ". " + size + machine.brand + "." + pocket + " " + whereText(machine);
+    var pay = machine.hasCard ? " Live status coming soon." : " Coin only, no live status";
+    return kind + " " + machine.paintedNumber + ". " + size + machine.brand + "." + pocket + " " + whereText(machine) + pay;
   }
 
   function doorBar(x, y, w, h, facing) {
@@ -437,7 +438,7 @@
     else detailKicker.textContent = machine.type === "washer" ? "Washer" : "Dryer";
     detailTitle.textContent = (machine.type === "washer" ? "Washer " : "Dryer ") + machine.paintedNumber;
     facts = machine.sizeLb ? machine.sizeLb + " lb " + machine.brand + "." : machine.brand + ".";
-    detailCopy.textContent = facts + " " + whereText(machine);
+    detailCopy.textContent = facts + " " + whereText(machine) + " " + (machine.hasCard ? "Live status coming soon." : "Coin only, no live status");
     scrollIntoFrame(id);
   }
 

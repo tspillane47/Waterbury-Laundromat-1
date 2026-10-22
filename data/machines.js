@@ -1,7 +1,10 @@
 /* Floor plan data for Waterbury Laundromat.
    Diagram coordinates, with the front of the store at the bottom.
    Not measured dimensions.
-   fascardId stays empty until the numbers are confirmed in FasCard admin.
+   25 machines with cards (17 washers, 8 dryers).
+   12 coin only (4 washers, 8 dryers).
+   Front dryer bank painted 9 through 16 uses FasCard 109 through 116.
+   That dryer mapping was verified on 2026-10-22.
    Later status values: open, almost_done, running, offline.
    almost_done means the last 5 minutes of a cycle, unless FasCard sends its own status.
    running includes minutes left.
@@ -15,10 +18,27 @@ window.FLOOR = {
 };
 
 (function () {
+  function cardInfo(entry) {
+    var n = entry.paintedNumber;
+    if (entry.type === "washer" && n >= 5 && n <= 18) {
+      return { hasCard: true, fascardId: n };
+    }
+    if (entry.type === "washer" && n === 19) return { hasCard: true, fascardId: 20 };
+    if (entry.type === "washer" && n === 20) return { hasCard: true, fascardId: 21 };
+    if (entry.type === "washer" && n === 21) return { hasCard: true, fascardId: 22 };
+    /* Painted 9 is 109, through painted 16 is 116. This dryer mapping was verified on 2026-10-22. */
+    if (entry.type === "dryer" && n >= 9 && n <= 16) {
+      return { hasCard: true, fascardId: 100 + n, fascardIdConfirmed: true };
+    }
+    return { hasCard: false, fascardId: null };
+  }
+
   function machine(entry) {
-    return {
+    var pay = cardInfo(entry);
+    var record = {
       id: entry.id,
-      fascardId: null,
+      fascardId: pay.fascardId,
+      hasCard: pay.hasCard,
       paintedNumber: entry.paintedNumber,
       type: entry.type,
       sizeLb: entry.sizeLb,
@@ -32,6 +52,8 @@ window.FLOOR = {
       w: entry.w,
       h: entry.h
     };
+    if (pay.fascardIdConfirmed === true) record.fascardIdConfirmed = true;
+    return record;
   }
 
   function washer(number, brand, sizeLb, facing, row, x, y, w, h) {
